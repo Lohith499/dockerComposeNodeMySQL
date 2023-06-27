@@ -4,22 +4,19 @@ services:
   web:
     build: .
     container_name: ppshein-express
-    environment:
-      DB_HOST: ppshein-mysql
     depends_on:
       - mysqlDB
     ports:
       - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      MYSQL_HOST : ppshein-mysql
     networks:
-    - my-bridge-network
+      - my-bridge-network
 
   mysqlDB:
     image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: users
-      MYSQL_USER: lillu
-      MYSQL_PASSWORD: root123
     container_name: ppshein-mysql
     expose:
       - "3306"
@@ -28,8 +25,10 @@ services:
     restart: always
     volumes:
       - ./mysql:/var/lib/mysql
+    env_file:
+      - .env
     networks:
-    - my-bridge-network
+      - my-bridge-network
 
 networks:
   my-bridge-network:
